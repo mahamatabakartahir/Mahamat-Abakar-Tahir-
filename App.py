@@ -1,12 +1,12 @@
 import streamlit as st
 import google.generativeai as genai
 
-# Ta clé API (ne pas changer)
+# Ta clé API
 API_KEY = "AIzaSyBG6MNYkTi1qDwiJQizX-N9z5rnLqntIaI"
 genai.configure(api_key=API_KEY)
 
-# On utilise le modèle Pro qui est le plus compatible
-model = genai.GenerativeModel('gemini-pro')
+# Le nom de modèle le plus stable
+model = genai.GenerativeModel('gemini-1.5-flash-latest')
 
 st.set_page_config(page_title="IA de Mahamat")
 st.title("🤖 Assistant de Mahamat")
@@ -25,16 +25,16 @@ if prompt := st.chat_input("Pose ta question ici..."):
 
     with st.chat_message("assistant"):
         try:
-            # Envoi de la requête
+            # Tentative avec le modèle flash-latest
             response = model.generate_content(prompt)
             st.markdown(response.text)
             st.session_state.messages.append({"role": "assistant", "content": response.text})
         except Exception as e:
-            # Si gemini-pro échoue aussi, on essaie une version plus récente
+            # Deuxième chance avec le nom court si ça échoue
             try:
-                model_alt = genai.GenerativeModel('gemini-1.0-pro')
-                response = model_alt.generate_content(prompt)
+                model_retry = genai.GenerativeModel('gemini-1.5-flash')
+                response = model_retry.generate_content(prompt)
                 st.markdown(response.text)
                 st.session_state.messages.append({"role": "assistant", "content": response.text})
             except Exception as e2:
-                st.error(f"Erreur Google : {e2}")
+                st.error(f"Erreur finale : {e2}")
