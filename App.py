@@ -2,7 +2,7 @@ import streamlit as st
 import google.generativeai as genai
 
 # Ta clé API récupérée de ton ancien code
-API_KEY = "AIzaSyAIQ4IxXac2WlydNW8hy8CjyH..."
+API_KEY = "AIzaSyBG6MNYkTi1qDwiJQizX-N9z5rnLqntIaI"
 
 genai.configure(api_key=API_KEY)
 
