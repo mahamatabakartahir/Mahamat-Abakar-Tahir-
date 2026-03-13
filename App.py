@@ -1,35 +1,33 @@
 import streamlit as st
 import google.generativeai as genai
 
-# Configuration de la clé
+# Ta clé API
 API_KEY = "AIzaSyBG6MNYkTi1qDwiJQizX-N9z5rnLqntIaI"
 genai.configure(api_key=API_KEY)
 
-# Configuration du modèle
+# Utilisation du modèle EXACT (en minuscules)
 model = genai.GenerativeModel('gemini-1.5-flash')
+
 st.set_page_config(page_title="IA de Mahamat")
 st.title("🤖 Assistant de Mahamat")
 
-if "chat_history" not in st.session_state:
-    st.session_state.chat_history = []
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
-for msg in st.session_state.chat_history:
-    with st.chat_message(msg["role"]):
-        st.write(msg["content"])
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
 
-user_input = st.chat_input("Pose-moi une question...")
-
-if user_input:
-    st.session_state.chat_history.append({"role": "user", "content": user_input})
+if prompt := st.chat_input("Pose ta question ici..."):
+    st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
-        st.write(user_input)
-
-    try:
-        response = model.generate_content(user_input)
-        assistant_text = response.text
-    except Exception as e:
-        assistant_text = "Désolé, j'ai un petit problème technique. Réessaie !"
+        st.markdown(prompt)
 
     with st.chat_message("assistant"):
-        st.write(assistant_text)
-    st.session_state.chat_history.append({"role": "assistant", "content": assistant_text})
+        try:
+            # Envoi de la requête au modèle
+            response = model.generate_content(prompt)
+            st.markdown(response.text)
+            st.session_state.messages.append({"role": "assistant", "content": response.text})
+        except Exception as e:
+            st.error(f"Erreur de connexion : {e}")
