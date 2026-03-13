@@ -7,9 +7,7 @@ API_KEY = "AIzaSyBG6MNYkTi1qDwiJQizX-N9z5rnLqntIaI"
 genai.configure(api_key=API_KEY)
 
 # Correction du nom du modèle (gemini-1.5-flash)
-model = genai.GenerativeModel(
-    'gemini-1.5-flash') 
-
+​model = genai.GenerativeModel('gemini-1.5-flash')
 st.set_page_config(page_title="IA de Mahamat")
 st.title("🤖 Assistant de Mahamat")
 
