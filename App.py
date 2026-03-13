@@ -3,10 +3,12 @@ import google.generativeai as genai
 
 # Ta clé API
 API_KEY = "AIzaSyBG6MNYkTi1qDwiJQizX-N9z5rnLqntIaI"
-genai.configure(api_key=API_KEY)
 
-# Le nom de modèle le plus stable
-model = genai.GenerativeModel('gemini-1.5-flash-latest')
+# FORCE LA VERSION STABLE ICI
+genai.configure(api_key=API_KEY, transport='grpc')
+
+# On utilise le nom complet du modèle stable
+model = genai.GenerativeModel('models/gemini-1.5-flash')
 
 st.set_page_config(page_title="IA de Mahamat")
 st.title("🤖 Assistant de Mahamat")
@@ -18,22 +20,19 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-if prompt := st.chat_input("Pose ta question ici..."):
+if prompt := st.chat_input("Pose ta question..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
 
     with st.chat_message("assistant"):
         try:
-            # Tentative avec le modèle flash-latest
+            # Appel direct
             response = model.generate_content(prompt)
             st.markdown(response.text)
             st.session_state.messages.append({"role": "assistant", "content": response.text})
         except Exception as e:
-            # Deuxième chance avec le nom court si ça échoue
-            try:
-                model_retry = genai.GenerativeModel('gemini-1.5-flash')
-                response = model_retry.generate_content(prompt)
+            st.error(f"Erreur : {e}")
                 st.markdown(response.text)
                 st.session_state.messages.append({"role": "assistant", "content": response.text})
             except Exception as e2:
