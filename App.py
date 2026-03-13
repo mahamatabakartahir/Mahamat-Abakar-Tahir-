@@ -8,9 +8,7 @@ genai.configure(api_key=API_KEY)
 
 # Correction du nom du modèle (gemini-1.5-flash)
 model = genai.GenerativeModel(
-    model_name="gemini-1.5-flash",
-    system_instruction="Tu es l'intelligence artificielle de Mahamat Abakar Tahir."
-)
+    'gemini-1.5-flash' Mahamat Abakar Tahir 
 
 st.set_page_config(page_title="IA de Mahamat")
 st.title("🤖 Assistant de Mahamat")
